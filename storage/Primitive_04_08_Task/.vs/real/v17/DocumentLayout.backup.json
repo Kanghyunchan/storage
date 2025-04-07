@@ -1,0 +1,37 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\user\\Desktop\\\uB300\uD559\\\uD504\uB9AC\uBBF8\uD2F0\uBE0C\\\uAD50\uC721\uACFC\uC81C\\real\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{9EDAB531-4516-4431-8A35-C84FE58FA19D}|real\\real.vcxproj|C:\\Users\\user\\Desktop\\\uB300\uD559\\\uD504\uB9AC\uBBF8\uD2F0\uBE0C\\\uAD50\uC721\uACFC\uC81C\\real\\real\\Task.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{9EDAB531-4516-4431-8A35-C84FE58FA19D}|real\\real.vcxproj|solutionrelative:real\\Task.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Task.c",
+              "DocumentMoniker": "C:\\Users\\user\\Desktop\\\uB300\uD559\\\uD504\uB9AC\uBBF8\uD2F0\uBE0C\\\uAD50\uC721\uACFC\uC81C\\real\\real\\Task.c",
+              "RelativeDocumentMoniker": "real\\Task.c",
+              "ToolTip": "C:\\Users\\user\\Desktop\\\uB300\uD559\\\uD504\uB9AC\uBBF8\uD2F0\uBE0C\\\uAD50\uC721\uACFC\uC81C\\real\\real\\Task.c*",
+              "RelativeToolTip": "real\\Task.c*",
+              "ViewState": "AgIAABAAAAAAAAAAAAAgwCcAAAAmAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
+              "WhenOpened": "2025-04-07T15:24:24.227Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

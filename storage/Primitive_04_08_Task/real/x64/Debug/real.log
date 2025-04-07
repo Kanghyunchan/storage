@@ -1,0 +1,7 @@
+﻿  Task.c
+C:\Users\user\Desktop\대학\프리미티브\교육과제\real\real\Task.c(40,9): warning C4476: 'printf' : 서식 지정자에 알 수 없는 형식 필드 문자 '\xeb'이(가) 있습니다.
+C:\Users\user\Desktop\대학\프리미티브\교육과제\real\real\Task.c(40,66): warning C4474: 'printf' : 서식 문자열에 전달된 인수가 너무 많습니다.
+      C:\Users\user\Desktop\대학\프리미티브\교육과제\real\real\Task.c(40,66):
+      자리 표시자 및 해당 매개 변수에는 variadic 인수가 0개 필요하지만 1개가 제공되었습니다.
+  
+  real.vcxproj -> C:\Users\user\Desktop\대학\프리미티브\교육과제\real\x64\Debug\real.exe
