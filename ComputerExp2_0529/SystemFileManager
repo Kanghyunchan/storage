@@ -1,0 +1,114 @@
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
+public class SystemFileManager {
+	private File[] files = new File[3]; // 고객, 객실, 예약 3개만.
+	private CustomerManager customerManager;
+	private RoomManager roomManager;
+	private ReservationManager reservationManager;
+
+	public SystemFileManager(CustomerManager cm, RoomManager rm, ReservationManager rvm) {
+		files[0] = new File("CustomerDB.txt");
+		files[1] = new File("RoomDB.txt");
+		files[2] = new File("ReservationDB.txt");
+		try {
+			for (File f : files) {
+				if (!f.exists())
+					f.createNewFile();
+			}
+		} catch (IOException e) {
+			System.out.println(e + "파일 생성 실패");
+		}
+		customerManager = cm;
+		roomManager = rm;
+		reservationManager = rvm;
+	}
+
+	public void loadFromFile() {
+		BufferedReader reader = null;
+		String str;
+		String cut[];
+		int count = 0;
+		try {
+			for (File f : files) {
+				reader = new BufferedReader(new FileReader(f));
+				while ((str = reader.readLine()) != null) {
+					switch (count) {
+					case 0:
+						cut = str.split(",");
+						customerManager.addCustomer(new Customer(cut[0], cut[1], cut[2], cut[3]));
+						break;
+					case 1:
+						cut = str.split(",");
+						roomManager.addRoom(
+								new Room(cut[0], cut[1], Integer.parseInt(cut[2]), Integer.parseInt(cut[3]), cut[4]));
+						break;
+					case 2:
+						cut = str.split(",");
+						reservationManager.addReservation(new Reservation(cut[0], cut[1], cut[2],
+								LocalDate.parse(cut[3], DateTimeFormatter.BASIC_ISO_DATE),
+								LocalDate.parse(cut[4], DateTimeFormatter.BASIC_ISO_DATE), Integer.parseInt(cut[5])));
+						break;
+					}
+				}
+				count++;
+				reader.close();
+			}
+		} catch (IOException e) {
+			System.out.println(e + "파일 읽기 실패");
+		}
+	}
+
+	public void saveToFile() {
+		BufferedWriter writer = null;
+		int count = 0;
+		try {
+			for (File f : files) {
+				writer = new BufferedWriter(new FileWriter(f));
+				switch (count) {
+				case 0:
+					for (Customer c : customerManager.getCustomerList()) {
+						if (c != null) {
+							writer.write(c.toString(true));
+							writer.newLine();
+						}
+					}
+					writer.flush();
+					writer.close();
+					break;
+				case 1:
+					for (Room r : roomManager.getRoomList()) {
+						if (r != null) {
+							writer.write(r.toString(true));
+							writer.newLine();
+						}
+					}
+					writer.flush();
+					writer.close();
+					break;
+				case 2:
+					for (Reservation rv : reservationManager.getReservationList()) {
+						if (rv != null) {
+							writer.write(rv.toString(true));
+							writer.newLine();
+						}
+					}
+					writer.flush();
+					writer.close();
+					break;
+				}
+				count++;
+			}
+		} catch (
+
+		IOException e) {
+			System.out.println(e + "파일 저장 실패");
+		}
+	}
+}
