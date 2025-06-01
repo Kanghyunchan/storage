@@ -1,0 +1,36 @@
+import java.util.ArrayList;
+
+public class CustomerManager {
+	private ArrayList<Customer> customers = new ArrayList<>(); // 고객리스트
+
+	public void addCustomer(Customer c) { // 고객생성
+		customers.add(c);
+		System.out.println("고객등록 완료되었습니다.");
+	}
+	public ArrayList<Customer> getCustomerList(){return customers;}
+	public void listCustomers() { // 고객검색
+		for (Customer c : customers) {
+			System.out.println(c.toString(false));
+		}
+	}
+
+	public Customer findById(String customerId) { // id로 검색
+		for (Customer c : customers) {
+			if (c.getCustomerId().equals(customerId))
+				return c;
+		}
+		return null;
+	}
+
+	// updateById 필요없을 꺼 같아서 안씀. findById로 다됨.
+	public boolean deleteById(String customerId) { // 고객정보삭제
+		Customer c = findById(customerId);
+		if (c != null) {
+			customers.remove(c);
+			return true;
+		} else {
+			return false;
+		}
+	}
+	// existsById 안써도 될꺼같아서 안씀.
+}
