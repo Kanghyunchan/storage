@@ -1,0 +1,38 @@
+import java.util.ArrayList;
+
+public class RoomManager {
+	private ArrayList<Room> rooms = new ArrayList<>();
+
+	public void addRoom(Room r) {
+		rooms.add(r);
+	}
+
+	public ArrayList<Room> getRoomList(){return rooms;}
+	
+	public void listRooms() {
+		for (Room r : rooms) {
+			System.out.println(r.toString(false));
+		}
+	}
+
+	public Room findById(String roomId) {
+		for (Room r : rooms) {
+			if (r.getRoomId().equals(roomId)) {
+				return r;
+			}
+		}
+		return null;
+	}
+
+	// updateById 필요없을 꺼 같아서 안씀. findById로 다됨.
+	public boolean deleteById(String roomId) {
+		Room r = findById(roomId);
+		if (r != null) {
+			rooms.remove(r);
+			return true;
+		} else {
+			return false;
+		}
+	}
+	// existsById 안써도 될꺼같아서 안씀.
+}
