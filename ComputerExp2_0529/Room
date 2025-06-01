@@ -1,0 +1,50 @@
+
+public class Room {
+	private String roomId, type, description;
+	private int price, capacity;
+
+	public Room(String roomId, String type, int price, int capacity, String description) {
+		this.roomId = roomId;
+		this.type = type;
+		this.price = price;
+		this.capacity = capacity;
+		this.description = description;
+	}
+
+	public String getRoomId() {
+		return roomId;
+	}
+
+	public int getPrice() {
+		return price;
+	}
+
+	public void setPrice(int price) {
+		this.price = price;
+	}
+
+	public void setCapacity(int capacity) {
+		this.capacity = capacity;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String toString(boolean isSaveData) {
+		if (isSaveData)
+			return roomId + "," + type + "," + price + "," + capacity + "," + description;
+		else
+			return "객실 ID: " + roomId + " 유형: " + type + " 가격: " + price + " 정원: " + capacity + "설명: " + description;
+	}
+
+	public Room fromString(String str) {
+		String cut[] = str.replaceAll(" ", "").split(",");
+		if (cut.length != 5) {
+			System.out.println("입력값 에러");
+			return null;
+		} else {
+			return new Room(cut[0], cut[1], Integer.parseInt(cut[2]), Integer.parseInt(cut[3]), cut[4]);
+		}
+	}
+}
