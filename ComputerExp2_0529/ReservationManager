@@ -1,0 +1,36 @@
+import java.util.ArrayList;
+
+public class ReservationManager {
+	private ArrayList<Reservation> reservations = new ArrayList<>();
+
+	public void addReservation(Reservation r) {
+		reservations.add(r);
+	}
+
+	public ArrayList<Reservation> getReservationList(){return reservations;}
+	
+	public void listReservation() {
+		for (Reservation r : reservations) {
+			System.out.println(r.toString(false));
+		}
+	}
+
+	public Reservation findById(String reservationId) {
+		for (Reservation r : reservations) {
+			if (r.getReservationId().equals(reservationId)) {
+				return r;
+			}
+		}
+		return null;
+	}
+
+	public boolean deleteById(String reservationId) {
+		Reservation r = findById(reservationId);
+		if (r != null) {
+			reservations.remove(r);
+			return true;
+		} else {
+			return false;
+		}
+	}
+}
