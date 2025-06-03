@@ -1,36 +1,61 @@
 import java.util.ArrayList;
 
 public class CustomerManager {
-	private ArrayList<Customer> customers = new ArrayList<>(); // 고객리스트
+    private ArrayList<Customer> customers = new ArrayList<>(); // 고객리스트
 
-	public void addCustomer(Customer c) { // 고객생성
-		customers.add(c);
-		System.out.println("고객등록 완료되었습니다.");
-	}
-	public ArrayList<Customer> getCustomerList(){return customers;}
-	public void listCustomers() { // 고객검색
-		for (Customer c : customers) {
-			System.out.println(c.toString(false));
-		}
-	}
+    public void addCustomer(Customer c) { // 고객생성
+        customers.add(c);
+    }
 
-	public Customer findById(String customerId) { // id로 검색
-		for (Customer c : customers) {
-			if (c.getCustomerId().equals(customerId))
-				return c;
-		}
-		return null;
-	}
+    public ArrayList<Customer> getCustomerList() {
+        return customers;
+    }
 
-	// updateById 필요없을 꺼 같아서 안씀. findById로 다됨.
-	public boolean deleteById(String customerId) { // 고객정보삭제
-		Customer c = findById(customerId);
-		if (c != null) {
-			customers.remove(c);
-			return true;
-		} else {
-			return false;
-		}
-	}
-	// existsById 안써도 될꺼같아서 안씀.
+    public void listCustomers() { // 고객검색
+        for (Customer c : customers) {
+            System.out.println(c.toString(false));
+        }
+    }
+
+    public Customer findById(String customerId) { // id로 검색
+        for (Customer c : customers) {
+            if (c.getCustomerId().equals(customerId))
+                return c;
+        }
+        return null;
+    }
+
+    public void updateById(String customerId, String updateStr) {
+        String[] cut = updateStr.replaceAll(" ", "").split(",");
+        Customer temp = findById(customerId);
+        System.out.println("수정 전 정보: " + temp.toString(false));
+        try {
+            if (cut.length == 1) {
+                temp.setName(cut[0]);
+            } else if (cut.length == 2) {
+                temp.setName(cut[0]);
+                temp.setPhone(cut[1]);
+            } else if (cut.length == 3) {
+                temp.setName(cut[0]);
+                temp.setPhone(cut[1]);
+                temp.setEmail(cut[2]);
+            }
+            System.out.println("수정 후 정보: " + temp.toString(false));
+            System.out.println("고객 정보 수정완료");
+        }catch (Exception e){
+            System.out.println("수정 에러");
+        }
+    }
+
+    // updateById 필요없을 꺼 같아서 안씀. findById로 다됨.
+    public boolean deleteById(String customerId) { // 고객정보삭제
+        Customer c = findById(customerId);
+        if (c != null) {
+            customers.remove(c);
+            return true;
+        } else {
+            return false;
+        }
+    }
+    // existsById 안써도 될꺼같아서 안씀.
 }
