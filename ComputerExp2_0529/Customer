@@ -2,6 +2,8 @@
 public class Customer {
 	private String customerId, name, phone, email; // 고객의 정보 변수들.
 
+	public Customer(){}
+
 	public Customer(String customrId, String name, String phone, String email) {
 		/*
 		 * 고객 생성자. id, 이름, 전화번호, 이메일을 받음.
@@ -12,21 +14,13 @@ public class Customer {
 		this.email = email;
 	}
 
-	public String getCustomerId() {
-		return customerId;
-	}
+	public String getCustomerId() {return customerId;}
 
-	public void setName(String name) {
-		this.name = name;
-	}
+	public void setName(String name) {this.name = name;}
 
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
+	public void setPhone(String phone) {this.phone = phone;}
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+	public void setEmail(String email) {this.email = email;}
 
 	public String toString(boolean isSaveData) {
 		if (isSaveData)
@@ -40,7 +34,6 @@ public class Customer {
 		 * 문자열로 고객 객체 생성 메소드
 		 */
 		String[] cut = str.replace(" ", "").split(",");
-		System.out.println(str);
 		if (cut.length != 4) {
 			System.out.println("입력값 에러");
 			return null;
