@@ -1,46 +1,69 @@
 import java.time.LocalDate;
+import java.time.Period;
 import java.time.format.DateTimeFormatter;
 
 public class Reservation {
-	private String reservationId, roomId, customerId, status;
-	private LocalDate checkIn, checkOut;
-	private int totalPrice;
+    private String reservationId, roomId, customerId, status;
+    private LocalDate checkIn, checkOut;
+    private int totalPrice;
 
-	public Reservation(String reservationId, String roomId, String customerId, LocalDate checkIn, LocalDate checkOut,
-			int totalPrice) {
-		this.reservationId = reservationId;
-		this.roomId = roomId;
-		this.customerId = customerId;
-		this.checkIn = checkIn;
-		this.checkOut = checkOut;
-		status = "예약됨";
-		this.totalPrice = totalPrice;
-	}
+    public Reservation() {}
 
-	public void setStatus(String status) {
-		this.status = status;
-	}
+    public Reservation(String reservationId, String roomId, String customerId, LocalDate checkIn, LocalDate checkOut,
+                       int totalPrice) {
+        this.reservationId = reservationId;
+        this.roomId = roomId;
+        this.customerId = customerId;
+        this.checkIn = checkIn;
+        this.checkOut = checkOut;
+        status = "예약됨";
+        this.totalPrice = totalPrice;
+    }
+    public void setStatus(String status) {
+        this.status = status;
+    }
+    public void setCheckIn(String checkIn){
+        int price = totalPrice / Period.between(this.checkIn, checkOut).getDays();
+        if(Period.between(LocalDate.parse(checkIn), checkOut).getDays() <= 0){
+            System.out.println("날짜 입력이 잘못되었습니다.");
+        } else {
+            this.checkIn = LocalDate.parse(checkIn);
+            totalPrice = Period.between(this.checkIn, checkOut).getDays() * price;
+        }
+    }
+    public void setCheckOut(String checkOut){
+        int price = totalPrice / Period.between(checkIn, this.checkOut).getDays();
+        if(Period.between(checkIn, LocalDate.parse(checkOut)).getDays() > 0){
+            this.checkOut = LocalDate.parse(checkOut);
+            totalPrice = Period.between(checkIn, this.checkOut).getDays() * price;
+        }
+    }
+    public String getReservationId() {return reservationId;}
+    public String getRoomId(){return roomId;}
+    public String getCustomerId(){return customerId;}
+    public int getTotalPrice(){return totalPrice;}
+    public LocalDate getCheckIn(){return checkIn;}
 
-	public String getReservationId() {
-		return reservationId;
-	}
+    public String toString(boolean isSaveData) {
+        if (isSaveData)
+            return reservationId + "," + roomId + "," + customerId + "," + checkIn + "," + checkOut + "," + totalPrice
+                    + "," + status;
+        else
+            return "예약ID: " + reservationId + " 객실ID: " + roomId + " 고객ID: " + customerId + " 체크인 날짜 : " + checkIn
+                    + " 체크아웃 날짜: " + checkOut + " 총 요금: " + totalPrice + " 상태: " + status;
+    }
 
-	public String toString(boolean isSaveData) {
-		if (isSaveData)
-			return reservationId + "," + roomId + "," + customerId + "," + checkIn + "," + checkOut + "," + totalPrice
-					+ "," + status;
-		else
-			return "예약ID: " + reservationId + " 객실ID: " + roomId + " 고객ID: " + customerId + " 체크인 날짜 : " + checkIn
-					+ " 체크아웃 날짜: " + checkOut + " 총 요금: " + totalPrice + "상태: " + status;
-	}
-
-	public Reservation fromString(String str) {
-		String[] cut = str.replaceAll(" ", "").split(",");
-		if (cut.length != 6) {
-			return null;
-		} else {
-			return new Reservation(cut[0], cut[1], cut[2], LocalDate.parse(cut[3], DateTimeFormatter.BASIC_ISO_DATE),
-					LocalDate.parse(cut[4], DateTimeFormatter.BASIC_ISO_DATE), Integer.parseInt(cut[5]));
-		}
-	}
+    public Reservation fromString(String str) {
+        String[] cut = str.replaceAll(" ", "").split(",");
+        if (cut.length != 6) {
+            return null;
+        } else {
+            LocalDate start = LocalDate.parse(cut[3]);
+            LocalDate end = LocalDate.parse(cut[4]);
+            Period diff = Period.between(start, end);
+            if(diff.getDays() <= 0) return null;
+            else return new Reservation(cut[0], cut[1], cut[2], start,
+                    end, (diff.getDays() * Integer.parseInt(cut[5])));
+        }
+    }
 }
