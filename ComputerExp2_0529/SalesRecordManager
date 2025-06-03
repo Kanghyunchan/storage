@@ -1,0 +1,46 @@
+import java.util.ArrayList;
+
+public class SalesRecordManager {
+    private ArrayList<SalesRecord> records = new ArrayList<>();
+
+    public ArrayList<SalesRecord> getRecords() {return records;}
+
+    public void addOrUpdateRecord(SalesRecord r, boolean isReservationCancel) {
+        if (isReservationCancel) {
+            for (SalesRecord s : records) {
+                if (s.getYearMonth().equals(r.getYearMonth())) {
+                    s.setTotalSales(s.getTotalSales() - r.getTotalSales());
+                    s.setReservationCount(s.getReservationCount() - 1);
+                    break;
+                }
+            }
+        } else {
+            if (records.isEmpty()) {
+                records.add(r);
+            } else {
+                boolean isAdd = true;
+                for (SalesRecord s : records) {
+                    System.out.println("s:" + s.getYearMonth() + " r: " + r.getYearMonth());
+                    if (s.getYearMonth().equals(r.getYearMonth())) {
+                        s.setTotalSales(s.getTotalSales() + r.getTotalSales());
+                        s.setReservationCount(s.getReservationCount() + 1);
+                        isAdd = false;
+                        break;
+                    }
+                }
+                if(isAdd) records.add(r);
+            }
+        }
+    }
+
+    public void listSales() {
+        for (SalesRecord s : records) System.out.println(s.toString(false));
+    }
+
+    public SalesRecord findByMonth(String ym) {
+        for (SalesRecord s : records) {
+            if (s.getYearMonth().equals(ym)) return s;
+        }
+        return null;
+    }
+}
