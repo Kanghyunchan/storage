@@ -1,0 +1,30 @@
+public class SalesRecord {
+    private String yearMonth;
+    private int totalSales, reservationCount;
+    public SalesRecord(){}
+    public SalesRecord(String yearMonth, int totalSales, int reservationCount){
+        this.yearMonth = yearMonth;
+        this.totalSales = totalSales;
+        this.reservationCount = reservationCount;
+    }
+
+    public String getYearMonth(){return yearMonth;}
+    public int getTotalSales(){return totalSales;}
+    public int getReservationCount(){return reservationCount;}
+    public void setTotalSales(int totalSales){this.totalSales = totalSales;}
+    public void setReservationCount(int reservationCount){this.reservationCount = reservationCount;}
+
+    public String toString(boolean isSaveData){
+        if(isSaveData) return yearMonth + "," + totalSales + "," + reservationCount;
+        else return yearMonth + "월 매출표: " + " 예약 건 수: " + reservationCount + " 총 매출액: " + totalSales;
+    }
+
+    public SalesRecord fromString(String str){
+        String[] cut = str.replaceAll(" ", "").split(",");
+        if (cut.length != 3) {
+            return null;
+        } else {
+            return new SalesRecord(cut[0], Integer.parseInt(cut[1]), Integer.parseInt(cut[2]));
+        }
+    }
+}
