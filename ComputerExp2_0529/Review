@@ -1,0 +1,33 @@
+import java.time.LocalDate;
+import java.time.Period;
+
+public class Review {
+    private String reviewId, customerId, roomId, content;
+    private int rating;
+
+    public Review() {}
+
+    public Review(String reviewId, String roomId, String customerId, String content, int rating) {
+        this.reviewId = reviewId;
+        this.roomId = roomId;
+        this.customerId = customerId;
+        this.content = content;
+        this.rating = rating;
+    }
+    public String getReviewId(){return reviewId;}
+    public String getRoomId() {return roomId;}
+
+    public String toString(boolean isSaveData) {
+        if (isSaveData) return reviewId + "," + customerId + "," + roomId + "," + content + "," + rating;
+        else return "리뷰ID: " + reviewId + " 고객ID: " + customerId + " 객실ID: " + roomId + " 리뷰 내용: " + content + " 평점: " + rating;
+    }
+
+    public Review fromString(String str) {
+        String[] cut = str.replaceAll(" ", "").split(",");
+        if (cut.length != 5) {
+            return null;
+        } else {
+            return new Review(cut[0], cut[1], cut[2], cut[3], Integer.parseInt(cut[4]));
+        }
+    }
+}
