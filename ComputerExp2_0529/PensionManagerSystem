@@ -3,99 +3,517 @@ import java.util.Scanner;
 
 public class PensionManagerSystem {
 
-	public static void customerMenu(CustomerManager customerManager) {
-		Scanner input = new Scanner(System.in);
-		int select = 0;
+    public static int inputInt(Scanner input) {
+        System.out.print(">>> ");
+        return input.nextInt();
+    }
 
-		System.out.println("고객관리메뉴");
+    public static void customerMenu(CustomerManager customerManager) {
+        Scanner input = new Scanner(System.in);
+        int select = 0;
 
-		while (select != 5) {
-			try {
-				System.out.println("원하는 기능의 번호를 입력해주세요. (1.고객등록, 2.고객검색, " + "3.고객 정보 수정, 4.고객 정보 삭제, 5.뒤로가기)");
-				System.out.print(">>> ");
-				select = input.nextInt();
-				switch (select) {
-				case 1:
-					System.out.print("등록하실 고객의 ID를 입력해주세요: ");
-					String id = input.next();
-					if (customerManager.findById(id) != null) {
-						System.out.println("ID 중복입니다.");
-					} else {
-						input = new Scanner(System.in);
-						System.out
-								.print("사용가능한 ID입니다. 이름, 전화번호, 이메일을 입력해주세요(양식. 홍길동, 010-1234-5678, hong@naver.com): ");
-						String str = input.nextLine();
-						Customer temp = new Customer(null, null, null, null);
-						customerManager.addCustomer(temp.fromString(id.concat("," + str)));
-					}
-					break;
-				case 2:
-					break;
-				case 3:
-					break;
-				case 4:
-					break;
-				case 5:
-					break;
-				default:
-					System.out.println("입력이 잘못되었습니다.");
-				}
+        System.out.println("고객관리메뉴");
 
-			} catch (InputMismatchException e) {
-				System.out.println("입력이 잘못되었습니다.");
-				input = new Scanner(System.in);
-			}
-		}
-	}
+        while (select != 5) {
+            try {
+                System.out.println("원하는 기능의 번호를 입력해주세요. (1.고객등록, 2.고객검색, 3.고객 정보 수정, 4.고객 정보 삭제, 5.뒤로가기)");
+                select = PensionManagerSystem.inputInt(input);
+                switch (select) {
+                    case 1:
+                        System.out.print("등록하실 고객의 ID를 입력해주세요: ");
+                        String id = input.next();
+                        if (customerManager.findById(id) != null) {
+                            System.out.println("ID 중복입니다.");
+                        } else {
+                            input = new Scanner(System.in);
+                            System.out
+                                    .print("사용가능한 ID입니다. 이름, 전화번호, 이메일을 입력해주세요(양식. 홍길동, 010-1234-5678, hong@naver.com): ");
+                            String str = input.nextLine();
+                            Customer temp = new Customer();
+                            if (temp.fromString(id.concat("," + str)) != null) {
+                                customerManager.addCustomer(temp.fromString(id.concat("," + str)));
+                                System.out.println("고객등록 완료되었습니다.");
+                            } else {
+                                System.out.println("고객등록 실패했습니다.");
+                            }
+                        }
+                        break;
+                    case 2:
+                        System.out.println("1.전체검색, 2.ID검색, 3.뒤로가기");
+                        select = PensionManagerSystem.inputInt(input);
+                        switch (select) {
+                            case 1:
+                                System.out.println("모든 고객의 정보를 출력합니다.");
+                                customerManager.listCustomers();
+                                break;
+                            case 2:
+                                System.out.println("검색할 고객의 ID를 입력해주세요.");
+                                select = PensionManagerSystem.inputInt(input);
+                                if (customerManager.findById(String.valueOf(select)) != null) {
+                                    System.out.println(customerManager.findById(String.valueOf(select)).toString(false));
+                                } else {
+                                    System.out.println("해당 " + select + "ID의 고객은 존재하지 않습니다.");
+                                }
+                                break;
+                            case 3:
+                                System.out.println("이전 메뉴로 이동합니다.");
+                                break;
+                            default:
+                                System.out.println("입력이 잘못되었습니다.");
+                        }
+                        break;
+                    case 3:
+                        System.out.println("수정할 고객의 ID를 입력해주세요");
+                        select = PensionManagerSystem.inputInt(input);
+                        if (customerManager.findById(String.valueOf(select)) != null) {
+                            input = new Scanner(System.in);
+                            System.out.println("수정할 정보를 입력해주세요(양식. 이름, 전화번호, 이메일): ");
+                            System.out.print(">>> ");
+                            String updateStr = input.nextLine();
+                            customerManager.updateById(String.valueOf(select), updateStr);
+                        } else {
+                            System.out.println("해당 " + select + "ID의 고객은 존재하지 않습니다.");
+                        }
+                        break;
+                    case 4:
+                        System.out.println("삭제할 고객의 ID를 입력해주세요");
+                        select = PensionManagerSystem.inputInt(input);
+                        if (customerManager.findById(String.valueOf(select)) != null) {
+                            input = new Scanner(System.in);
+                            System.out.println("정말로 삭제하시겠습니까?(삭제를 원하면 YES를 입력해주세요)");
+                            System.out.print(">>> ");
+                            String ask = input.next();
+                            if (ask.equals("YES")) {
+                                if (customerManager.deleteById(String.valueOf(select))) {
+                                    System.out.println("고객 정보 삭제 성공했습니다.");
+                                } else {
+                                    System.out.println("고객 정보 삭제 실패했습니다.");
+                                }
 
-	public static void roomMenu() {
+                            } else {
+                                System.out.println("삭제를 취소하였습니다.");
+                            }
+                        } else {
+                            System.out.println("해당 " + select + "ID의 고객은 존재하지 않습니다.");
+                        }
+                        break;
+                    case 5:
+                        System.out.println("이전 메뉴로 이동합니다.");
+                        break;
+                    default:
+                        System.out.println("입력이 잘못되었습니다.");
+                }
 
-	}
+            } catch (InputMismatchException e) {
+                System.out.println("입력이 잘못되었습니다.");
+                input = new Scanner(System.in);
+            }
+        }
+    }
 
-	public static void reservationMenu() {
+    public static void roomMenu(RoomManager roomManager) {
+        Scanner input = new Scanner(System.in);
+        int select = 0;
 
-	}
+        System.out.println("객실관리메뉴");
 
-	public static void main(String[] args) {
-		CustomerManager customManager = new CustomerManager();
-		RoomManager roomManager = new RoomManager();
-		ReservationManager reservationManager = new ReservationManager();
-		SystemFileManager fileManager = new SystemFileManager(customManager, roomManager, reservationManager);
+        while (select != 5) {
+            try {
+                System.out.println("원하는 기능의 번호를 입력해주세요. (1.객실등록, 2.객실검색, 3.객실 정보 수정, 4.객실 삭제, 5.뒤로가기)");
+                select = PensionManagerSystem.inputInt(input);
+                switch (select) {
+                    case 1:
+                        System.out.print("등록하실 객실의 ID를 입력해주세요: ");
+                        String id = input.next();
+                        if (roomManager.findById(id) != null) {
+                            System.out.println("ID 중복입니다.");
+                        } else {
+                            input = new Scanner(System.in);
+                            System.out
+                                    .print("사용가능한 ID입니다. 객실타입, 요금, 인원수, 설명을 입력해주세요(양식. 작은방, 30000, 4, 풍경이 잘 보이는 방): ");
+                            String str = input.nextLine();
+                            Room temp = new Room();
+                            if (temp.fromString(id.concat("," + str)) != null) {
+                                roomManager.addRoom(temp.fromString(id.concat("," + str)));
+                                System.out.println("객실등록 완료되었습니다.");
+                            } else {
+                                System.out.println("객실등록 실패했습니다.");
+                            }
+                        }
+                        break;
+                    case 2:
+                        System.out.println("1.전체검색, 2.ID검색, 3.뒤로가기");
+                        select = PensionManagerSystem.inputInt(input);
+                        switch (select) {
+                            case 1:
+                                System.out.println("모든 객실의 정보를 출력합니다.");
+                                roomManager.listRooms();
+                                break;
+                            case 2:
+                                System.out.println("검색할 객실의 ID를 입력해주세요.");
+                                select = PensionManagerSystem.inputInt(input);
+                                if (roomManager.findById(String.valueOf(select)) != null) {
+                                    System.out.println(roomManager.findById(String.valueOf(select)).toString(false));
+                                } else {
+                                    System.out.println("해당 " + select + "ID의 객실은 존재하지 않습니다.");
+                                }
+                                break;
+                            case 3:
+                                System.out.println("이전 메뉴로 이동합니다.");
+                                break;
+                            default:
+                                System.out.println("입력이 잘못되었습니다.");
+                        }
+                        break;
+                    case 3:
+                        System.out.println("수정할 객실의 ID를 입력해주세요");
+                        select = PensionManagerSystem.inputInt(input);
+                        if (roomManager.findById(String.valueOf(select)) != null) {
+                            input = new Scanner(System.in);
+                            System.out.println("수정할 정보를 입력해주세요(양식. 요금, 인원수, 설명): ");
+                            System.out.print(">>> ");
+                            String updateStr = input.nextLine();
+                            roomManager.updateById(String.valueOf(select), updateStr);
+                        } else {
+                            System.out.println("해당 " + select + "ID의 객실은 존재하지 않습니다.");
+                        }
+                        break;
+                    case 4:
+                        System.out.println("삭제할 객실의 ID를 입력해주세요");
+                        select = PensionManagerSystem.inputInt(input);
+                        if (roomManager.findById(String.valueOf(select)) != null) {
+                            input = new Scanner(System.in);
+                            System.out.println("정말로 삭제하시겠습니까?(삭제를 원하면 YES를 입력해주세요)");
+                            System.out.print(">>> ");
+                            String ask = input.next();
+                            if (ask.equals("YES")) {
+                                if (roomManager.deleteById(String.valueOf(select))) {
+                                    System.out.println("객실 삭제 성공했습니다.");
+                                } else {
+                                    System.out.println("객실 삭제 실패했습니다.");
+                                }
 
-		int select;
-		boolean isLoop = true;
-		Scanner input = new Scanner(System.in);
-		fileManager.loadFromFile();
-		System.out.println("펜션관리시스템");
+                            } else {
+                                System.out.println("삭제를 취소하였습니다.");
+                            }
+                        } else {
+                            System.out.println("해당 " + select + "ID의 객실은 존재하지 않습니다.");
+                        }
+                        break;
+                    case 5:
+                        System.out.println("이전 메뉴로 이동합니다.");
+                        break;
+                    default:
+                        System.out.println("입력이 잘못되었습니다.");
+                }
 
-		while (isLoop) {
-			try {
-				System.out.println("원하는 기능의 번호를 입력해주세요. (1.고객관리, 2.객실관리, 3.예약관리, 4.시스템종료)");
-				System.out.print(">>> ");
-				select = input.nextInt();
-				switch (select) {
-				case 1:
-					customerMenu(customManager);
-					break;
-				case 2:
-					roomMenu();
-					break;
-				case 3:
-					reservationMenu();
-					break;
-				case 4:
-					isLoop = false;
-					input.close();
-					fileManager.saveToFile();
-					break;
-				default:
-					System.out.println("입력이 잘못되었습니다.");
-				}
-			} catch (InputMismatchException e) {
-				System.out.println("입력이 잘못되었습니다.");
-				input = new Scanner(System.in);
-			}
-		}
-	}
+            } catch (InputMismatchException e) {
+                System.out.println("입력이 잘못되었습니다.");
+                input = new Scanner(System.in);
+            }
+        }
+    }
 
+    public static void reservationMenu(CustomerManager customerManager, RoomManager roomManager, ReservationManager reservationManager, SalesRecordManager salesRecordManager) {
+        Scanner input = new Scanner(System.in);
+        int select = 0;
+
+        System.out.println("예약관리메뉴");
+
+        while (select != 5) {
+            try {
+                System.out.println("원하는 기능의 번호를 입력해주세요. (1.예약등록, 2.예약조회, 3.예약 정보 수정, 4.예약 취소, 5.뒤로가기)");
+                select = PensionManagerSystem.inputInt(input);
+                switch (select) {
+                    case 1:
+                        System.out.print("등록하실 예약의 ID를 입력해주세요: ");
+                        String id = input.next();
+                        if (reservationManager.findById(id) != null) {
+                            System.out.println("ID 중복입니다.");
+                        } else {
+                            input = new Scanner(System.in);
+                            System.out
+                                    .print("사용가능한 ID입니다. 객실ID, 고객ID, 체크인날짜, 체크아웃날짜를 입력해주세요.(양식. 110, 110, 2025-05-30, 2025-06-03): ");
+                            String str = input.nextLine();
+                            Reservation temp = new Reservation();
+                            if (roomManager.findById(str.replaceAll(" ", "").split(",")[0]) != null && customerManager.findById(str.replaceAll(" ", "").split(",")[1]) != null) {
+                                if (temp.fromString(id.concat("," + str + "," + roomManager.findById(str.split(",")[0]).getPrice())) != null) {
+                                    reservationManager.addReservation(temp.fromString(id.concat("," + str + "," + roomManager.findById(str.split(",")[0]).getPrice())));
+                                    Reservation sales = reservationManager.findById(id);
+                                    String ym = sales.getCheckIn().getYear() + "-" + sales.getCheckIn().getMonthValue();
+                                    salesRecordManager.addOrUpdateRecord(new SalesRecord(ym, sales.getTotalPrice(), 1), false);
+                                    System.out.println("예약 완료되었습니다.");
+                                } else {
+                                    System.out.println("예약 실패했습니다.");
+                                }
+                            } else {
+                                System.out.println("객실 ID 또는 고객 ID가 올바르지 않습니다.");
+                            }
+                        }
+                        break;
+                    case 2:
+                        System.out.println("1.전체조회, 2.객실ID로 조회, 3.고객ID로 조회, 4.뒤로가기");
+                        select = PensionManagerSystem.inputInt(input);
+                        switch (select) {
+                            case 1:
+                                System.out.println("모든 예약 정보를 출력합니다.");
+                                reservationManager.listReservation();
+                                break;
+                            case 2:
+                                System.out.println("예약 조회할 객실ID를 입력해주세요.");
+                                select = PensionManagerSystem.inputInt(input);
+                                if (roomManager.findById(String.valueOf(select)) != null) {
+                                    reservationManager.listReservation(String.valueOf(select), true);
+                                } else {
+                                    System.out.println("해당 " + select + "ID의 객실은 존재하지 않습니다.");
+                                }
+                                break;
+                            case 3:
+                                System.out.println("예약 조회할 고객ID를 입력해주세요.");
+                                select = PensionManagerSystem.inputInt(input);
+                                if (customerManager.findById(String.valueOf(select)) != null) {
+                                    reservationManager.listReservation(String.valueOf(select), false);
+                                } else {
+                                    System.out.println("해당 " + select + "ID의 고객은 존재하지 않습니다.");
+                                }
+                                break;
+                            case 4:
+                                System.out.println("이전 메뉴로 이동합니다.");
+                                break;
+                            default:
+                                System.out.println("입력이 잘못되었습니다.");
+                        }
+                        break;
+                    case 3:
+                        System.out.println("수정할 예약의 ID를 입력해주세요");
+                        select = PensionManagerSystem.inputInt(input);
+                        if (reservationManager.findById(String.valueOf(select)) != null) {
+                            Reservation sales = reservationManager.findById(String.valueOf(select));
+                            String ym = sales.getCheckIn().getYear() + "-" + sales.getCheckIn().getMonthValue();
+                            salesRecordManager.addOrUpdateRecord(new SalesRecord(ym, sales.getTotalPrice(), 1), true);
+                            input = new Scanner(System.in);
+                            System.out.println("수정할 정보를 입력해주세요(양식. 체크인, 체크아웃, 예약상태): ");
+                            System.out.print(">>> ");
+                            String updateStr = input.nextLine();
+                            reservationManager.updateById(String.valueOf(select), updateStr);
+                            sales = reservationManager.findById(String.valueOf(select));
+                            ym = sales.getCheckIn().getYear() + "-" + sales.getCheckIn().getMonthValue();
+                            salesRecordManager.addOrUpdateRecord(new SalesRecord(ym, sales.getTotalPrice(), 1), false);
+
+                        } else {
+                            System.out.println("해당 " + select + "ID의 예약은 존재하지 않습니다.");
+                        }
+                        break;
+                    case 4:
+                        System.out.println("취소할 예약 ID를 입력해주세요");
+                        select = PensionManagerSystem.inputInt(input);
+                        if (reservationManager.findById(String.valueOf(select)) != null) {
+                            input = new Scanner(System.in);
+                            System.out.println("정말로 취소하시겠습니까?(취소를 원하면 YES를 입력해주세요)");
+                            System.out.print(">>> ");
+                            String ask = input.next();
+                            if (ask.equals("YES")) {
+                                Reservation sales = reservationManager.findById(String.valueOf(select));
+                                String ym = sales.getCheckIn().getYear() + "-" + sales.getCheckIn().getMonthValue();
+                                if (reservationManager.deleteById(String.valueOf(select))) {
+                                    salesRecordManager.addOrUpdateRecord(new SalesRecord(ym, sales.getTotalPrice(), 1), true);
+                                    System.out.println("예약 취소 성공했습니다.");
+                                } else {
+                                    System.out.println("예약 취소 실패했습니다.");
+                                }
+                            } else {
+                                System.out.println("취소를 취소하였습니다.");
+                            }
+                        } else {
+                            System.out.println("해당 " + select + "ID의 예약은 존재하지 않습니다.");
+                        }
+                        break;
+                    case 5:
+                        System.out.println("이전 메뉴로 이동합니다.");
+                        break;
+                    default:
+                        System.out.println("입력이 잘못되었습니다.");
+                }
+
+            } catch (InputMismatchException e) {
+                System.out.println("입력이 잘못되었습니다.");
+                input = new Scanner(System.in);
+            }
+        }
+    }
+
+    public static void ReviewMenu(ReviewManager reviewManager, RoomManager roomManager, CustomerManager customerManager) {
+        Scanner input = new Scanner(System.in);
+        int select = 0;
+
+        System.out.println("리뷰관리메뉴");
+
+        while (select != 3) {
+            try {
+                System.out.println("원하는 기능의 번호를 입력해주세요. (1.리뷰등록, 2.리뷰조회, 3.뒤로가기)");
+                select = PensionManagerSystem.inputInt(input);
+                switch (select) {
+                    case 1:
+                        System.out.print("등록하실 리뷰의 ID를 입력해주세요: ");
+                        String id = input.next();
+                        if (reviewManager.findById(id) != null) {
+                            System.out.println("ID 중복입니다.");
+                        } else {
+                            input = new Scanner(System.in);
+                            System.out
+                                    .print("사용가능한 ID입니다. 객실ID, 고객ID, 리뷰내용, 평점을 입력해주세요.(양식. 110, 110, 정말 좋은 방입니다., 9): ");
+                            String str = input.nextLine();
+                            Review temp = new Review();
+                            if (roomManager.findById(str.replaceAll(" ", "").split(",")[0]) != null && customerManager.findById(str.replaceAll(" ", "").split(",")[1]) != null) {
+                                if (temp.fromString(id.concat("," + str)) != null) {
+                                    reviewManager.addReview(temp.fromString(id.concat("," + str)));
+                                    System.out.println("리뷰 등록되었습니다.");
+                                } else {
+                                    System.out.println("리뷰 등록실패했습니다.");
+                                }
+                            } else {
+                                System.out.println("객실 ID 또는 고객 ID가 올바르지 않습니다.");
+                            }
+                        }
+                        break;
+                    case 2:
+                        System.out.println("1.전체조회, 2.객실ID로 조회, 3.뒤로가기");
+                        select = PensionManagerSystem.inputInt(input);
+                        switch (select) {
+                            case 1:
+                                System.out.println("모든 리뷰 정보를 출력합니다.");
+                                reviewManager.listReviews();
+                                break;
+                            case 2:
+                                System.out.println("리뷰 조회할 객실ID를 입력해주세요.");
+                                select = PensionManagerSystem.inputInt(input);
+                                if (roomManager.findById(String.valueOf(select)) != null) {
+                                    reviewManager.listReviewsByRoom(String.valueOf(select));
+                                } else {
+                                    System.out.println("해당 " + select + "ID의 객실은 존재하지 않습니다.");
+                                }
+                                break;
+                            case 3:
+                                System.out.println("이전 메뉴로 이동합니다.");
+                                break;
+                            default:
+                                System.out.println("입력이 잘못되었습니다.");
+                        }
+                        break;
+                    case 3:
+                        System.out.println("이전 메뉴로 이동합니다.");
+                        break;
+                    default:
+                        System.out.println("입력이 잘못되었습니다.");
+                }
+
+            } catch (InputMismatchException e) {
+                System.out.println("입력이 잘못되었습니다.");
+                input = new Scanner(System.in);
+            }
+        }
+    }
+
+    public static void SalesRecordMenu(SalesRecordManager salesRecordManager) {
+        Scanner input = new Scanner(System.in);
+        int select = 0;
+
+        System.out.println("매출관리메뉴");
+
+        while (select != 2) {
+            try {
+                System.out.println("원하는 기능의 번호를 입력해주세요. (1.매출조회, 2.뒤로가기)");
+                select = PensionManagerSystem.inputInt(input);
+                switch (select) {
+                    case 1:
+                        System.out.println("1.전체조회, 2.년월로 조회, 3.뒤로가기");
+                        select = PensionManagerSystem.inputInt(input);
+                        switch (select) {
+                            case 1:
+                                System.out.println("모든 매출 정보를 출력합니다.");
+                                salesRecordManager.listSales();
+                                break;
+                            case 2:
+                                System.out.println("매출 조회할 년월을 입력해주세요.(예시. 2025-3)");
+                                String str = input.next();
+                                if(salesRecordManager.findByMonth(str) != null){
+                                    System.out.println(salesRecordManager.findByMonth(str).toString(false));
+                                } else {
+                                    System.out.println("해당 년월의 매출이 없습니다.");
+                                }
+                                break;
+                            case 3:
+                                System.out.println("이전 메뉴로 이동합니다.");
+                                break;
+                            default:
+                                System.out.println("입력이 잘못되었습니다.");
+                        }
+                        break;
+                    case 2:
+                        System.out.println("이전 메뉴로 이동합니다.");
+                        break;
+                    default:
+                        System.out.println("입력이 잘못되었습니다.");
+                }
+
+            } catch (InputMismatchException e) {
+                System.out.println("입력이 잘못되었습니다.");
+                input = new Scanner(System.in);
+            }
+        }
+    }
+    
+    public static void main(String[] args) {
+        CustomerManager customManager = new CustomerManager();
+        RoomManager roomManager = new RoomManager();
+        ReservationManager reservationManager = new ReservationManager();
+        ReviewManager reviewManager = new ReviewManager();
+        SalesRecordManager salesRecordManager = new SalesRecordManager();
+        SystemFileManager fileManager = new SystemFileManager(customManager, roomManager, reservationManager, reviewManager, salesRecordManager);
+
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            fileManager.saveToFile();
+        }));
+
+        int select;
+        boolean isLoop = true;
+        Scanner input = new Scanner(System.in);
+        fileManager.loadFromFile();
+        System.out.println("펜션관리시스템");
+
+        while (isLoop) {
+            try {
+                System.out.println("원하는 기능의 번호를 입력해주세요. (1.고객관리, 2.객실관리, 3.예약관리, 4.리뷰관리, 5.매출관리 6.시스템종료)");
+                select = PensionManagerSystem.inputInt(input);
+
+                switch (select) {
+                    case 1:
+                        customerMenu(customManager);
+                        break;
+                    case 2:
+                        roomMenu(roomManager);
+                        break;
+                    case 3:
+                        reservationMenu(customManager, roomManager, reservationManager, salesRecordManager);
+                        break;
+                    case 4:
+                        ReviewMenu(reviewManager, roomManager, customManager);
+                        break;
+                    case 5:
+                        SalesRecordMenu(salesRecordManager);
+                        break;
+                    case 6:
+                        isLoop = false;
+                        input.close();
+                        //fileManager.saveToFile();
+                        break;
+                    default:
+                        System.out.println("입력이 잘못되었습니다.");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("입력이 잘못되었습니다.");
+                input = new Scanner(System.in);
+            }
+        }
+    }
 }
